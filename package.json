@@ -1,0 +1,38 @@
+{
+  "name": "cookie-clicker-boss-mode",
+  "author": "Adrian von Gegerfelt <adrian@designbyadrian.com>",
+  "version": "0.1.0",
+  "license": "MIT",
+  "description": "Boss Mode overlay mod for Cookie Clicker (Steam), with React-rendered UI.",
+  "scripts": {
+    "build": "npm run update:modversion && run-s build:*",
+    "dev:css": "npx postcss ./src/tailwind.css -o ./boss-mode/style.css --watch",
+    "build:js": "node build.js",
+    "build:css": "npx postcss ./src/tailwind.css -o ./boss-mode/style.css",
+    "update:modversion": "node update-mod-version.js"
+  },
+  "dependencies": {
+    "@fortawesome/fontawesome-svg-core": "7.2.0",
+    "@fortawesome/free-regular-svg-icons": "7.2.0",
+    "@fortawesome/free-solid-svg-icons": "7.2.0",
+    "@fortawesome/react-fontawesome": "3.2.0",
+    "@tanstack/react-table": "8.21.3",
+    "chart.js": "4.5.1",
+    "clsx": "2.1.1",
+    "d3-scale-chromatic": "3.1.0",
+    "react": "^18.3.1",
+    "react-chartjs-2": "5.3.1",
+    "react-dom": "^18.3.1",
+    "throttleit": "2.1.0"
+  },
+  "devDependencies": {
+    "autoprefixer": "10.4.24",
+    "esbuild": "^0.19.0",
+    "npm-run-all": "4.1.5",
+    "postcss": "8.5.6",
+    "postcss-cli": "11.0.1",
+    "postcss-prefix-selector": "2.1.1",
+    "prettier": "3.8.1",
+    "tailwindcss": "3.4.19"
+  }
+}

@@ -1,0 +1,196 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Boss Mode Overlay Test Harness</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link href="boss-mode/style.css" rel="stylesheet"></link>
+    <style>
+      body {
+        margin: 0;
+        padding: 16px;
+        background: #1b1410;
+        color: #f8e7c0;
+        font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      }
+      h1 {
+        margin-top: 0;
+      }
+      #topBar {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 12px;
+      }
+      .smallFancyButton {
+        padding: 4px 10px;
+        border-radius: 4px;
+        border: 1px solid #f8e7c0;
+        background: #5c3b2a;
+        color: #f8e7c0;
+        cursor: pointer;
+      }
+      .smallFancyButton:hover {
+        filter: brightness(1.1);
+      }
+      #mock-info {
+        font-size: 13px;
+        opacity: 0.9;
+        margin-bottom: 8px;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="topBar">
+      <button id="fakeBossToggle" class="smallFancyButton">Boss</button>
+      <div>Boss Mode Overlay Test (Ctrl+B hotkey also works here)</div>
+    </div>
+    <div id="mock-info">
+      This page simulates a minimal subset of Cookie Clicker's API (buildings + upgrades) so you can
+      develop and tweak the Boss Mode overlay without launching the game.
+    </div>
+
+    <script src="./boss-mode/overlay.js"></script>
+    <script>
+      // Minimal mock for the Cookie Clicker Game API used by BossModeOverlay.
+      (function () {
+        var buildings = [
+          {"id":0,"name":"Cursor","displayName":"Cursor","desc":"Autoclicks once every 10 seconds.","basePrice":15,"price":1263870341711,"amount":180,"icon":0,"locked":false,"level":0,"cps":89000.8,"bulkBuy":{"1":1263870341711,"10":25661267307514,"100":9894524522273282000},"bulkSell":{"1":274754422111,"10":1585768204531,"100":2106448775745}},
+          {"id":1,"name":"Grandma","displayName":"Grandma","desc":"A nice grandma to bake more cookies.","basePrice":100,"price":2082729459946,"amount":170,"icon":1,"locked":false,"level":10,"cps":65536,"bulkBuy":{"1":2082729459946,"10":42287152120816,"100":16305167575024775000},"bulkSell":{"1":452767273902,"10":2613184317429,"100":3471212810622}},
+          {"id":2,"name":"Farm","displayName":"Farm","desc":"Grows cookie plants from cookie seeds.","basePrice":1100,"price":1399808860564,"amount":150,"icon":3,"locked":false,"level":0,"cps":1382.4,"bulkBuy":{"1":1399808860564,"10":28421324692018,"100":10958753157071247000},"bulkSell":{"1":304306274036,"10":1756329197898,"100":2333012780902}},
+          {"id":3,"name":"Mine","displayName":"Mine","desc":"Mines out cookie dough and chocolate chips.","basePrice":12000,"price":933040492843,"amount":130,"icon":4,"locked":false,"level":0,"cps":2782.4,"bulkBuy":{"1":933040492843,"10":18944191271371,"100":7304540451684228000},"bulkSell":{"1":202834889749,"10":1170678588033,"100":1555066163836}},
+          {"id":4,"name":"Factory","displayName":"Factory","desc":"Produces large quantities of cookies.","basePrice":130000,"price":617597872402,"amount":110,"icon":5,"locked":false,"level":0,"cps":13034.666666666666,"bulkBuy":{"1":617597872402,"10":12539533185660,"100":4835019140579991000},"bulkSell":{"1":134260407044,"10":774895206351,"100":1029328910799}},
+          {"id":5,"name":"Bank","displayName":"Bank","desc":"Generates cookies from interest.","basePrice":1400000,"price":1644038830981,"amount":100,"icon":6,"locked":false,"level":0,"cps":63840,"bulkBuy":{"1":1644038830981,"10":33380101196644,"100":12870768457700043000},"bulkSell":{"1":357399745866,"10":2062762626153,"100":2740062384968}},
+          {"id":6,"name":"Temple","displayName":"Temple","desc":"Full of precious, ancient chocolate.","basePrice":20000000,"price":1435017588029,"amount":80,"icon":7,"locked":false,"level":0,"cps":167232,"bulkBuy":{"1":1435017588029,"10":29136192773983,"100":11234393470639230000},"bulkSell":{"1":311960345224,"10":1800505312087,"100":2391662646715}},
+          {"id":7,"name":"Wizard tower","displayName":"<span style=\"font-size:90%;letter-spacing:-1px;position:relative;bottom:2px;\">Wizard tower</span>","desc":"Summons cookies with magic spells.","basePrice":330000000,"price":1446719586067,"amount":60,"icon":8,"locked":false,"level":0,"cps":903466.6666666666,"bulkBuy":{"1":1446719586067,"10":29373786844976,"100":11326005483935773000},"bulkSell":{"1":314504257841,"10":1815187717241,"100":2410649310112}},
+          {"id":8,"name":"Shipment","displayName":"Shipment","desc":"Brings in fresh cookies from the cookie planet.","basePrice":5100000000,"price":1366104085797,"amount":40,"icon":9,"locked":false,"level":5,"cps":2585142.8571428573,"bulkBuy":{"1":1366104085797,"10":27736992441875,"100":10694886912692806000},"bulkSell":{"1":296979149087,"10":1714040081363,"100":2268340142995}},
+          {"id":9,"name":"Alchemy lab","displayName":"<span style=\"font-size:90%;letter-spacing:-1px;position:relative;bottom:2px;\">Alchemy lab</span>","desc":"Turns gold into cookies!","basePrice":75000000000,"price":1227490304471,"amount":20,"icon":10,"locked":false,"level":1,"cps":7759999.999999999,"bulkBuy":{"1":1227490304471,"10":24922617281920,"100":9609714317694147000},"bulkSell":{"1":266845718364,"10":1540122457155,"100":1920817174119}},
+          {"id":10,"name":"Portal","displayName":"Portal","desc":"Opens a door to the Cookieverse.","basePrice":1000000000000,"price":4045557735708,"amount":10,"icon":11,"locked":false,"level":5,"cps":40000000,"bulkBuy":{"1":4045557735708,"10":82139864381588,"100":31671658793790857000},"bulkSell":{"1":879469072980,"10":5075929559514,"100":5075929559514}},
+          {"id":11,"name":"Time machine","displayName":"<span style=\"font-size:80%;letter-spacing:-1px;position:relative;bottom:3px;\">Time machine</span>","desc":"Brings cookies from the past, before they were even eaten.","basePrice":14000000000000,"price":56637808299911,"amount":10,"icon":12,"locked":false,"level":10,"cps":130000000,"bulkBuy":{"1":56637808299911,"10":1149958101342231,"100":443403223113072000000},"bulkSell":{"1":12312567021720,"10":71063013833185,"100":71063013833185}},
+          {"id":12,"name":"Antimatter condenser","displayName":"<span style=\"font-size:65%;letter-spacing:-1px;position:relative;bottom:4px;\">Antim. condenser</span>","desc":"Condenses the antimatter in the universe into cookies.","basePrice":170000000000000,"price":687744815070345,"amount":10,"icon":13,"locked":false,"level":2,"cps":430000000,"bulkBuy":{"1":687744815070345,"10":13963776944869944,"100":5.384181994944446e+21},"bulkSell":{"1":149509742406597,"10":862908025117241,"100":862908025117241}},
+          {"id":13,"name":"Prism","displayName":"Prism","desc":"Converts light itself into cookies.","basePrice":2100000000000000,"price":2100000000000000,"amount":0,"icon":14,"locked":false,"level":0,"cps":2900000000,"bulkBuy":{"1":2100000000000000,"10":42637808299910730,"100":1.6440374309803918e+22},"bulkSell":{"1":0,"10":0,"100":0}},
+          {"id":14,"name":"Chancemaker","displayName":"<span style=\"font-size:85%;letter-spacing:-1px;position:relative;bottom:2px;\">Chancemaker</span>","desc":"Generates cookies out of thin air through sheer luck.","basePrice":26000000000000000,"price":26000000000000000,"amount":0,"icon":15,"locked":true,"level":0,"cps":21000000000,"bulkBuy":{"1":26000000000000000,"10":527896674189370900,"100":2.035474914547152e+23},"bulkSell":{"1":0,"10":0,"100":0}},
+          {"id":15,"name":"Fractal engine","displayName":"<span style=\"font-size:80%;letter-spacing:-1px;position:relative;bottom:4px;\">Fractal engine</span>","desc":"Turns cookies into even more cookies.","basePrice":310000000000000000,"price":310000000000000000,"amount":0,"icon":16,"locked":true,"level":0,"cps":150000000000,"bulkBuy":{"1":310000000000000000,"10":6294152653796345000,"100":2.4269123981139123e+24},"bulkSell":{"1":0,"10":0,"100":0}},
+          {"id":16,"name":"Javascript console","displayName":"<span style=\"font-size:65%;letter-spacing:-1px;position:relative;bottom:4px;\">Javascript console</span>","desc":"Creates cookies from the very code this game was written in.","basePrice":71000000000000000000,"price":71000000000000000000,"amount":0,"icon":17,"locked":true,"level":0,"cps":1100000000000,"bulkBuy":{"1":71000000000000000000,"10":1.4415639949017437e+21,"100":5.5584122666479924e+26},"bulkSell":{"1":0,"10":0,"100":0}},
+          {"id":17,"name":"Idleverse","displayName":"Idleverse","desc":"There's been countless other idle universes running alongside our own. You've finally found a way to hijack their production and convert whatever they've been making into cookies!","basePrice":1.2e+22,"price":1.2e+22,"amount":0,"icon":18,"locked":true,"level":0,"cps":8300000000000,"bulkBuy":{"1":1.2e+22,"10":2.4364461885663273e+23,"100":9.39449960560224e+28},"bulkSell":{"1":0,"10":0,"100":0}},
+          {"id":18,"name":"Cortex baker","displayName":"Cortex baker","desc":"These artificial brains the size of planets are capable of simply dreaming up cookies into existence. Time and space are inconsequential. Reality is arbitrary.","basePrice":1.9000000000000003e+24,"price":1.9000000000000003e+24,"amount":0,"icon":19,"locked":true,"level":0,"cps":64000000000000,"bulkBuy":{"1":1.9000000000000003e+24,"10":3.8577064652300187e+25,"100":1.4874624375536884e+31},"bulkSell":{"1":0,"10":0,"100":0}},
+          {"id":19,"name":"You","displayName":"You","desc":"You, alone, are the reason behind all these cookies. You figure if there were more of you... maybe you could make even more.","basePrice":5.4e+26,"price":5.4e+26,"amount":0,"icon":20,"locked":true,"level":0,"cps":510000000000000,"bulkBuy":{"1":5.4e+26,"10":1.096400784854847e+28,"100":4.227524822521009e+33},"bulkSell":{"1":0,"10":0,"100":0}}
+        ];
+
+        // Normalize CpS for the harness data so that:
+        // - building.cps is the current CpS from all owned buildings of that type
+        // - building.percentageOfTotal is that building's share of total CpS (Boss Mode-style)
+        // - building.synergyPercentage is always 0 in the harness
+        function recomputeBuildingCps() {
+          var totalCps = 0;
+
+          for (var i = 0; i < buildings.length; i++) {
+            var b = buildings[i];
+            var amount = typeof b.amount === "number" ? b.amount : 0;
+            var perBuildingCps =
+              typeof b.cps === "number" && !isNaN(b.cps) ? b.cps : 0;
+
+            var currentCps = amount > 0 ? perBuildingCps * amount : 0;
+
+            if (!amount || amount <= 0) {
+              currentCps = 0;
+            }
+
+            b.cps = currentCps;
+            totalCps += currentCps;
+          }
+
+          for (var j = 0; j < buildings.length; j++) {
+            var bx = buildings[j];
+            if (totalCps > 0 && typeof bx.cps === "number") {
+              bx.percentageOfTotal = (bx.cps / totalCps) * 100;
+            } else {
+              bx.percentageOfTotal = 0;
+            }
+            bx.synergyPercentage = 0;
+          }
+        }
+
+        // Initial normalization.
+        recomputeBuildingCps();
+
+        var upgrades = [
+          { id: 0, name: 'Reinforced index finger', desc: 'The mouse and cursors are twice as efficient.', basePrice: 100, price: 100, bought: false, unlocked: true },
+          { id: 1, name: 'Carpal tunnel prevention cream', desc: 'The mouse and cursors are twice as efficient.', basePrice: 500, price: 500, bought: false, unlocked: true },
+          { id: 2, name: 'Lucky day', desc: 'Golden cookies appear twice as often and stay twice as long.', basePrice: 7777, price: 7777, bought: true, unlocked: true },
+          { id: 3, name: 'Serendipity', desc: 'Golden cookies appear more often.', basePrice: 77777, price: 77777, bought: false, unlocked: false }
+        ];
+
+
+
+        let cps = 0;
+        let cookies = 0;
+
+        var mockGameApi = {
+          listBuildings: function () {
+            return buildings;
+          },
+          buyBuilding: function (id, amount) {
+            var b = buildings.find(function (x) { return x.id === id; });
+            if (!b || !b.unlocked) return;
+            var n = Math.max(1, Number(amount) || 1);
+            b.amount += n;
+            recomputeBuildingCps();
+          },
+          sellBuilding: function (id, amount) {
+            var b = buildings.find(function (x) { return x.id === id; });
+            if (!b) return;
+            var n = Math.max(1, Number(amount) || 1);
+            b.amount = Math.max(0, b.amount - n);
+            recomputeBuildingCps();
+          },
+          listUpgrades: function () {
+            // Return a shallow copy so overlay can't mutate directly.
+            return upgrades.map(function (u) {
+              return {
+                id: u.id,
+                name: u.name,
+                desc: u.desc,
+                basePrice: u.basePrice,
+                price: u.price,
+                bought: u.bought,
+                unlocked: u.unlocked
+              };
+            });
+          },
+          buyUpgrade: function (id) {
+            var u = upgrades.find(function (x) { return x.id === id; });
+            if (u && u.unlocked) u.bought = true;
+          },
+          onTick: function (cb) {
+            // Simple interval to simulate game ticks.
+            setInterval(cb, 1000);
+          },
+          getCpS: function() {
+            cookies = cookies + Math.random() * 1000; // Simulate cookies increasing over time.
+            cps = buildings.reduce((acc, b) => acc + b.cps, 0);
+            return { cps, cookies, hasTempBuff: true, hasTempDebuff: false };
+          }
+        };
+
+        var overlay = window.BossModeOverlay;
+        overlay.init({
+          id: 'boss-mode-overlay',
+          gameApi: mockGameApi,
+          mountButton: function (toggle) {
+            // Reuse the fake Boss button at the top.
+            document.getElementById('fakeBossToggle').onclick = toggle;
+          },
+          bindHotkey: function (toggle) {
+            document.addEventListener('keydown', function (e) {
+              if (e.ctrlKey && !e.shiftKey && !e.altKey && e.key.toLowerCase() === 'b') {
+                toggle();
+              }
+            });
+          }
+        });
+      })();
+    </script>
+  </body>
+  </html>
+

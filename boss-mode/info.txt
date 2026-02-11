@@ -1,0 +1,10 @@
+{
+  "Name": "Boss Mode",
+  "ID": "BossMode",
+  "Author": "thinkadrian",
+  "Description": "Adds a Boss Mode overlay with quick access to upgrades, including a toggle button and keyboard shortcut.",
+  "ModVersion": "0.1.0",
+  "GameVersion": 2.031,
+  "Date": "09/02/2026",
+  "AllowSteamAchievs": 1
+}
