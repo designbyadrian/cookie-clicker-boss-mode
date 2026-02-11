@@ -12,7 +12,11 @@ You get tables, and graphs, and everything that looks super important!
 
 Just press Ctrl+B!
 
-### Using in Cookie Clicker (Steam)
+### ❤️ Attributions
+
+Building tables and graphs use logic taken from the [Percentage Graph Mod](https://steamcommunity.com/sharedfiles/filedetails/?id=2686203614) (as shipped in version 5.1) by [NewtonGR](https://steamcommunity.com/id/newtongr/myworkshopfiles/?appid=1454400)
+
+### 🚀 Using in Cookie Clicker (Steam)
 
 1. Locate your Steam Cookie Clicker install and open its `mods/local` folder.
 2. Copy the `boss-mode` folder from this repo into `mods/local/BossMode` (or similar).
@@ -21,7 +25,7 @@ Just press Ctrl+B!
    - The **Boss** button in the top bar to toggle the overlay.
    - The **Ctrl+B** keyboard shortcut to toggle the overlay from anywhere.
 
-### Project Layout
+### 🏗️ Project Layout
 
 - `boss-mode/`
   - `info.txt` – Steam mod metadata (copy this folder into Cookie Clicker’s `mods/local`).
@@ -29,7 +33,7 @@ Just press Ctrl+B!
   - `overlay.js` – shared overlay module; renders the Boss Mode UI and talks to an abstract `gameApi` (used both in-game and in the test harness).
 - `test-harness.html` – simple HTML page that loads `overlay.js` with a mock `gameApi` so you can iterate on UI and behavior in a regular browser tab.
 
-### Testing the overlay without Cookie Clicker
+### 🧪 Testing the overlay without Cookie Clicker
 
 1. Open `test-harness.html` in a browser (you can use a simple static file server or open it directly).
 2. Use the **Boss** button or **Ctrl+B** to open the overlay.
