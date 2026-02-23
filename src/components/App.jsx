@@ -4,6 +4,7 @@ import Sheets from "./Sheets";
 import StatusHeader from "./StatusHeader";
 import ToolBar from "./ToolBar";
 import Buildings from "../pages/buildings";
+import { SettingsProvider } from "../context/SettingsContext.jsx";
 
 export function BossModeApp({
   cps,
@@ -17,24 +18,41 @@ export function BossModeApp({
   actions,
 }) {
   const [activeSheet, setActiveSheet] = useState("buildings");
-  const [storeMultiplier, setStoreMultiplier] = useState(1);
 
   return (
     <div className="flex absolute inset-0 flex-col pointer-events-auto bg-slate-950">
-      <Header title={title} onClose={actions.handleClose} hasTempBuff={hasTempBuff} hasTempDebuff={hasTempDebuff} />
-      <ToolBar actions={actions} />
-      <StatusHeader cookies={cookies} cps={cps} numberFormat={numberFormat} hasTempBuff={hasTempBuff} hasTempDebuff={hasTempDebuff} />
-      <main className="overflow-auto flex-1 p-8 bg-white">
-        {activeSheet === "buildings" && (
-          <Buildings cps={cps} buildings={buildings} actions={actions} />
-        )}
-        {activeSheet === "upgrades" && <div>upgrades</div>}
-      </main>
-      <Sheets
-        activeSheet={activeSheet}
-        onChange={setActiveSheet}
-        actions={actions}
-      />
+      <SettingsProvider>
+        <Header
+          title={title}
+          onClose={actions.handleClose}
+          hasTempBuff={hasTempBuff}
+          hasTempDebuff={hasTempDebuff}
+        />
+        <ToolBar actions={actions} />
+        <StatusHeader
+          cookies={cookies}
+          cps={cps}
+          numberFormat={numberFormat}
+          hasTempBuff={hasTempBuff}
+          hasTempDebuff={hasTempDebuff}
+        />
+        <main className="overflow-auto flex-1 bg-white">
+          {activeSheet === "buildings" && (
+            <Buildings
+              cookies={cookies}
+              cps={cps}
+              buildings={buildings}
+              actions={actions}
+            />
+          )}
+          {activeSheet === "upgrades" && <div>upgrades</div>}
+        </main>
+        <Sheets
+          activeSheet={activeSheet}
+          onChange={setActiveSheet}
+          actions={actions}
+        />
+      </SettingsProvider>
     </div>
   );
 }

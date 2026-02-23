@@ -1,19 +1,27 @@
 import { useMemo, useEffect, useRef, useState } from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faLock } from "@fortawesome/free-solid-svg-icons/faLock";
 
-import { Doughnut } from "react-chartjs-2";
 import "../chartjsSetup.js";
+import { Doughnut } from "react-chartjs-2";
 
 import { formatLargeNumber, getColourArray } from "../utils";
 
 import Table from "../components/Table.jsx";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faLock } from "@fortawesome/free-solid-svg-icons/faLock";
+import Attachment from "../components/Attachment.jsx";
+import { useSettings } from "../context/SettingsContext.jsx";
 
-const Buildings = ({ cps, buildings }) => {
+const Buildings = ({ cookies, cps, buildings }) => {
   const [data, setData] = useState([]);
   const [pieChartData, setPieChartData] = useState(null);
+  const { storeMultiplier } = useSettings();
   const colours = useRef(getColourArray(10));
   const pieMetaRef = useRef([]);
+  const chartRef = useRef(null);
+
+  const handleAttachmentChange = (id, state) => {
+    console.log(id, state);
+  };
 
   const columns = useMemo(() => {
     if (!data || data.length === 0) return [];
@@ -107,8 +115,8 @@ const Buildings = ({ cps, buildings }) => {
         },
       },
       {
-        accessorKey: "price",
-        header: "Price",
+        accessorKey: "bulkSell",
+        header: "Sell",
         cell: (info) => {
           const value = info.getValue();
           const row = info.row.original;
@@ -118,9 +126,40 @@ const Buildings = ({ cps, buildings }) => {
           }
 
           return (
-            <span title={formatLargeNumber(value, "short")}>
+            <button
+              type="button"
+              className="px-2 py-1 text-xs font-semibold text-orange-600 bg-orange-50 rounded shadow-sm hover:bg-orange-100 dark:bg-orange-500/20 dark:text-orange-400 dark:shadow-none dark:hover:bg-green-500/30 disabled:opacity-50 disabled:bg-slate-50 disabled:text-slate-600 disabled:cursor-not-allowed"
+              disabled
+            >
+              {formatLargeNumber(value["1"], "suffix")}
+            </button>
+          );
+        },
+        meta: {
+          align: "right",
+        },
+      },
+      {
+        accessorKey: "bulkBuy",
+        header: () => {
+          return `Buy (${storeMultiplier}x)`;
+        },
+        cell: (info) => {
+          const value = info.getValue()[storeMultiplier.toString()] || "1";
+          const row = info.row.original;
+
+          if (row.locked) {
+            return <span className="text-slate-500">???</span>;
+          }
+
+          return (
+            <button
+              type="button"
+              className="px-2 py-1 text-xs font-semibold text-green-600 bg-green-50 rounded shadow-sm hover:bg-green-100 dark:bg-green-500/20 dark:text-green-400 dark:shadow-none dark:hover:bg-green-500/30 disabled:opacity-50 disabled:bg-slate-50 disabled:text-slate-600 disabled:cursor-not-allowed"
+              disabled={cookies < value}
+            >
               {formatLargeNumber(value, "suffix")}
-            </span>
+            </button>
           );
         },
         meta: {
@@ -128,7 +167,7 @@ const Buildings = ({ cps, buildings }) => {
         },
       },
     ];
-  }, [data]);
+  }, [data, cookies, storeMultiplier]);
 
   useEffect(() => {
     const filteredBuildsings = (buildings || []).filter((b) => !b.locked);
@@ -173,54 +212,56 @@ const Buildings = ({ cps, buildings }) => {
   }, [buildings]);
 
   return (
-    <div className="flex flex-row gap-8 min-w-full">
-      <div className="flex-1">
-        <h2 className="mb-4 text-xl font-bold text-blue-400">Facilities</h2>
-        <Table columns={columns} data={data} colour="blue" />
-      </div>
-      <div className="w-1/3">
-        {pieChartData && (
-          <>
-            <h2 className="mb-4 text-xl font-bold text-slate-700">
-              CPS Distribution
-            </h2>
-            <Doughnut
-              data={pieChartData}
-              options={{
-                responsive: true,
-                plugins: {
-                  tooltip: {
-                    callbacks: {
-                      label: function (context) {
-                        const value = context.parsed || 0;
-                        const meta = pieMetaRef.current[context.dataIndex];
-                        const total =
-                          meta && typeof meta.percentageOfTotal === "number"
-                            ? meta.percentageOfTotal
-                            : 0;
-                        const synergy =
-                          meta && typeof meta.synergyPercentage === "number"
-                            ? meta.synergyPercentage
-                            : 0;
+    <div className="min-w-full">
+      <Table columns={columns} data={data} />
+      <Attachment
+        id="cps-chart"
+        onChange={handleAttachmentChange}
+        onResize={() => {
+          chartRef.current?.resize();
+        }}
+        width={400}
+        height={400}
+        x={300}
+        y={100}
+        lockAspectRatio
+      >
+        <Doughnut
+          ref={chartRef}
+          data={pieChartData ?? { labels: [], datasets: [] }}
+          options={{
+            responsive: true,
+            plugins: {
+              tooltip: {
+                callbacks: {
+                  label: function (context) {
+                    const value = context.parsed || 0;
+                    const meta = pieMetaRef.current[context.dataIndex];
+                    const total =
+                      meta && typeof meta.percentageOfTotal === "number"
+                        ? meta.percentageOfTotal
+                        : 0;
+                    const synergy =
+                      meta && typeof meta.synergyPercentage === "number"
+                        ? meta.synergyPercentage
+                        : 0;
 
-                        const totalStr = total.toFixed(1);
-                        const synergyStr = synergy.toFixed(1);
-                        return `${formatLargeNumber(
-                          value,
-                          "suffix",
-                        )} CpS — ${totalStr}% (+${synergyStr}% synergy)`;
-                      },
-                    },
-                  },
-                  legend: {
-                    display: false,
+                    const totalStr = total.toFixed(1);
+                    const synergyStr = synergy.toFixed(1);
+                    return `${formatLargeNumber(
+                      value,
+                      "suffix",
+                    )} CpS — ${totalStr}% (+${synergyStr}% synergy)`;
                   },
                 },
-              }}
-            />
-          </>
-        )}
-      </div>
+              },
+              legend: {
+                display: false,
+              },
+            },
+          }}
+        />
+      </Attachment>
     </div>
   );
 };

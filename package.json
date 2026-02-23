@@ -23,6 +23,7 @@
     "react": "^18.3.1",
     "react-chartjs-2": "5.3.1",
     "react-dom": "^18.3.1",
+    "react-rnd": "10.5.2",
     "throttleit": "2.1.0"
   },
   "devDependencies": {
