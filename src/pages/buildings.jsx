@@ -61,7 +61,7 @@ const Buildings = ({ cookies, cps, buildings }) => {
       },
       {
         accessorKey: "amount",
-        header: "Owned",
+        header: "Count",
         cell: (info) => {
           const value = info.getValue();
           const row = info.row.original;
@@ -87,6 +87,10 @@ const Buildings = ({ cookies, cps, buildings }) => {
           const value = info.getValue();
           const row = info.row.original;
 
+          if (row.locked) {
+            return <span className="text-slate-400">???</span>;
+          }
+
           return <span>{value}</span>;
         },
         meta: {
@@ -95,7 +99,7 @@ const Buildings = ({ cookies, cps, buildings }) => {
       },
       {
         accessorKey: "cps",
-        header: "CPS",
+        header: "CpS",
         cell: (info) => {
           const value = info.getValue();
           const row = info.row.original;
@@ -214,13 +218,7 @@ const Buildings = ({ cookies, cps, buildings }) => {
         {
           //label: "Amount",
           data: buildingCountData,
-          backgroundColor: colours.current.map((color) =>
-            color.replace(
-              /rgba\((\d+), (\d+), (\d+), (\d+)\)/,
-              "rgba($1, $2, $3, 0.8)",
-            ),
-          ),
-          borderColor: colours.current,
+          backgroundColor: colours.current,
 
           options: {
             scales: {
@@ -253,7 +251,7 @@ const Buildings = ({ cookies, cps, buildings }) => {
       labels,
       datasets: [
         {
-          label: "CPS",
+          label: "CpS",
           data: pieData,
           backgroundColor: colours.current,
         },
@@ -335,10 +333,10 @@ const Buildings = ({ cookies, cps, buildings }) => {
         onResize={() => {
           buildingChartRef.current?.resize();
         }}
-        width={500}
-        height={300}
-        x={800}
-        y={500}
+        width={800}
+        height={200}
+        x={200}
+        y={600}
         onClick={() => setSelectedAttachment("building-count-chart")}
         selected={selectedAttachment === "building-count-chart"}
       >
