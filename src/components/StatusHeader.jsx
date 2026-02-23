@@ -18,10 +18,13 @@ const StatusHeader = ({
   );
 
   return (
-    <nav className="flex gap-6 justify-between px-4 py-1 bg-white border-b shrink-0 border-slate-200">
-      <div>
-        <span className="text-slate-400">Consumables: </span>
-        <span className="inline-flex gap-1 items-center font-mono text-slate-700">
+    <nav className="flex gap-6 justify-between items-center px-4 py-1 border-b bg-slate-300 shrink-0 border-slate-300">
+      <div className="flex gap-1 items-center">
+        <label className="italic font-semibold text-slate-400">
+          <span aria-hidden="true">Cx</span>
+          <span className="sr-only">Consumables</span>
+        </label>
+        <div className="px-3 font-mono text-sm bg-white rounded-full shadow-inner min-w-60 text-slate-400">
           <CountUp
             end={cookies}
             duration={0.2}
@@ -29,25 +32,25 @@ const StatusHeader = ({
             formattingFn={formatCookies}
             useEasing={false}
           />
-          {hasTempBuff && (
-            <span className="text-yellow-500">
-              <FontAwesomeIcon icon={faStar} />
-            </span>
-          )}
-          {hasTempDebuff && (
-            <span className="text-red-500">
-              <FontAwesomeIcon icon={faExclamationTriangle} />
-            </span>
-          )}
-        </span>
+        </div>
       </div>
-      <div>
-        <span className="text-slate-400">
-          <abbr title="Consumables per Second">CpS</abbr>:{" "}
-        </span>
-        <span className="font-mono text-slate-700">
+      <div className="flex gap-1 items-center">
+        {hasTempBuff && (
+          <span className="text-slate-400">
+            <FontAwesomeIcon icon={faStar} spin />
+          </span>
+        )}
+        {hasTempDebuff && (
+          <span className="text-slate-400">
+            <FontAwesomeIcon icon={faExclamationTriangle} beat />
+          </span>
+        )}
+        <label className="italic font-semibold text-slate-400">
+          <abbr title="Consumables per Second">CpS</abbr>
+        </label>
+        <div className="px-3 font-mono text-sm bg-white rounded-full shadow-inner min-w-60 text-slate-400">
           {formatLargeNumber(cps, numberFormat)}
-        </span>
+        </div>
       </div>
     </nav>
   );

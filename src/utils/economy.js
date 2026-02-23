@@ -1,8 +1,9 @@
 /**
  * Formats a number in various human-readable ways.
  * @param {number} num - The number to format.
- * @param {'spaced'|'short'|'suffix'|'sci'} [style='spaced'] - The formatting style.
+ * @param {'spaced'|'valueOnly'|'short'|'suffix'|'sci'} [style='spaced'] - The formatting style.
  *   'spaced': 1 234 567
+ *   'valueOnly': scaled number like short/suffix but no unit (e.g. 1.234 for 1.234M)
  *   'short': 1.234 million
  *   'suffix': 1.234M
  *   'sci':   1.234e+6
@@ -22,7 +23,7 @@ export function formatLargeNumber(num, style = "spaced", decimals = 3) {
     // Add spaces as thousand separators
     return num.toLocaleString("en-US").replace(/,/g, " ");
   }
-  if (style === "short" || style === "suffix") {
+  if (style === "short" || style === "suffix" || style === "valueOnly") {
     const units = [
       { value: 1e63, symbol: "vigintillion", short: "Vi" },
       { value: 1e60, symbol: "novemdecillion", short: "Nd" },
@@ -48,11 +49,14 @@ export function formatLargeNumber(num, style = "spaced", decimals = 3) {
     ];
     for (const unit of units) {
       if (Math.abs(num) >= unit.value) {
-        if (style === "suffix") {
-          return (num / unit.value).toFixed(decimals) + unit.short;
-        } else {
-          return (num / unit.value).toFixed(decimals) + " " + unit.symbol;
+        const value = (num / unit.value).toFixed(decimals);
+        if (style === "valueOnly") {
+          return value;
         }
+        if (style === "suffix") {
+          return value + unit.short;
+        }
+        return value + " " + unit.symbol;
       }
     }
     return Math.round(num).toString();
