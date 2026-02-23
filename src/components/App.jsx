@@ -20,8 +20,8 @@ export function BossModeApp({
   const [activeSheet, setActiveSheet] = useState("buildings");
 
   return (
-    <div className="flex absolute inset-0 flex-col pointer-events-auto bg-slate-950">
-      <SettingsProvider>
+    <div className="flex absolute inset-0 flex-col pointer-events-auto text-slate-600 bg-slate-950">
+      <SettingsProvider numberFormat={numberFormat}>
         <Header
           title={title}
           onClose={actions.handleClose}
@@ -32,7 +32,6 @@ export function BossModeApp({
         <StatusHeader
           cookies={cookies}
           cps={cps}
-          numberFormat={numberFormat}
           hasTempBuff={hasTempBuff}
           hasTempDebuff={hasTempDebuff}
         />

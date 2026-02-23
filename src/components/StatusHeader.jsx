@@ -4,21 +4,17 @@ import { formatLargeNumber } from "../utils/index.js";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faStar } from "@fortawesome/free-solid-svg-icons/faStar";
 import { faExclamationTriangle } from "@fortawesome/free-solid-svg-icons/faExclamationTriangle";
+import { useSettings } from "../context/SettingsContext.jsx";
 
-const StatusHeader = ({
-  cookies,
-  cps,
-  numberFormat,
-  hasTempBuff,
-  hasTempDebuff,
-}) => {
+const StatusHeader = ({ cookies, cps, hasTempBuff, hasTempDebuff }) => {
+  const { numberFormat } = useSettings();
   const formatCookies = useCallback(
     (value) => formatLargeNumber(value, numberFormat),
     [numberFormat],
   );
 
   return (
-    <nav className="flex gap-6 justify-between items-center px-4 py-1 border-b bg-slate-300 shrink-0 border-slate-300">
+    <nav className="flex gap-6 justify-between items-center px-4 py-1 border-b bg-slate-200 shrink-0 border-slate-300">
       <div className="flex gap-1 items-center">
         <label className="italic font-semibold text-slate-400">
           <span aria-hidden="true">Cx</span>
