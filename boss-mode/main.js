@@ -174,16 +174,17 @@
      * Wire overlay module to the real Game API and controls.
      */
     _setupOverlay: function () {
-      var mod = this;
-      var overlay = window.BossModeOverlay;
+      const mod = this;
+      const overlay = window.BossModeOverlay;
 
       // Adapter that the overlay can use; keeps logic testable.
-      var gameApi = {
+      const gameApi = {
         listUpgrades: function () {
-          var list = [];
-          for (var i = 0; i < Game.UpgradesById.length; i++) {
-            var u = Game.UpgradesById[i];
-            if (!u) continue;
+          const list = [];
+
+          for (const id in Game.UpgradesById) {
+            const u = Game.UpgradesById[id];
+
             list.push({
               id: u.id,
               name: u.name,
@@ -196,9 +197,15 @@
                     ? u.getPrice
                     : u.basePrice,
               bought: !!u.bought,
-              unlocked: !!u.unlocked,
+              locked: !!!u.unlocked,
+              type: u.type,
+              pool: u.pool,
+              icon: u.icon,
             });
           }
+
+          console.log("list", list);
+          console.log("str list", JSON.stringify(list));
           return list;
         },
         buyUpgrade: function (id) {
@@ -206,10 +213,10 @@
           if (u && typeof u.buy === "function") u.buy();
         },
         listBuildings: function () {
-          var list = [];
-          var objs = Game.ObjectsById || [];
+          const list = [];
+          const objs = Game.ObjectsById || [];
 
-          var importantProps = [
+          const importantProps = [
             "id",
             "name",
             "displayName",
@@ -225,10 +232,10 @@
           ];
 
           for (var i = 0; i < objs.length; i++) {
-            var o = objs[i];
+            const o = objs[i];
             if (!o) continue;
 
-            var item = {};
+            const item = {};
             importantProps.forEach(function (prop) {
               if (typeof o[prop] !== "undefined") item[prop] = o[prop];
             });
