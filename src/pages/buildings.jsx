@@ -145,8 +145,6 @@ const Buildings = ({ cookies, cps, buildings }) => {
             return <span className="text-slate-500">???</span>;
           }
 
-          console.log(info, info.row.original, value);
-
           if (value === "0") {
             return <span className="text-slate-500">n/a</span>;
           }
@@ -275,7 +273,7 @@ const Buildings = ({ cookies, cps, buildings }) => {
 
     setData(filteredBuildsings);
   }, [buildings]);
-  console.log(buildingCountData);
+
   return (
     <div className="min-w-full">
       <Table columns={columns} data={data} />

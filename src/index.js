@@ -95,25 +95,24 @@ const BossModeOverlay = {
     const api = options.gameApi;
 
     // Throttled functions
-    this._throttledRefreshData = throttle(() => this._refreshData(), 500);
+    // Tick path: only cookies + render (no buildings/upgrades) so we don't re-render on every tick.
+    this._throttledSetCookieData = throttle(() => this._setCookieData(), 200);
     this._throttledRender = throttle(() => {
       if (this._state.visible) this._render();
-    }, 100);
+    }, 200);
     this._throttledRefreshTitle = throttle(() => this._refreshTitle(), 1000);
 
     if (api && typeof api.onTick === "function") {
       api.onTick(() => {
         if (!this._state.visible) return;
-        this._setCookieData();
-        this._throttledRefreshData();
+        this._throttledSetCookieData();
         this._throttledRender();
         this._throttledRefreshTitle();
       });
     } else {
       setInterval(() => {
         if (!this._state.visible) return;
-        this._setCookieData();
-        this._throttledRefreshData();
+        this._throttledSetCookieData();
         this._throttledRender();
         this._throttledRefreshTitle();
       }, 1000);
@@ -172,6 +171,16 @@ const BossModeOverlay = {
     if (this._state.hasBuildings) this._state.buildings = api.listBuildings();
   },
 
+  /**
+   * Called when cookies or buildings/upgrades change (purchase/sale).
+   * Updates state and re-renders. Used by overlay actions and by game hooks in main.js.
+   */
+  onPurchase() {
+    this._setCookieData();
+    this._refreshData();
+    this._render();
+  },
+
   _render() {
     if (!this._root || !this._panelRoot) return;
     this._root.style.display = this._state.visible ? "block" : "none";
@@ -186,20 +195,17 @@ const BossModeOverlay = {
       },
       buyUpgrade: (id) => {
         if (api && typeof api.buyUpgrade === "function") api.buyUpgrade(id);
-        this._refreshData();
-        this._render();
+        this.onPurchase();
       },
       buyBuilding: (id, amount) => {
         if (api && typeof api.buyBuilding === "function")
           api.buyBuilding(id, amount);
-        this._refreshData();
-        this._render();
+        this.onPurchase();
       },
       sellBuilding: (id, amount) => {
         if (api && typeof api.sellBuilding === "function")
           api.sellBuilding(id, amount);
-        this._refreshData();
-        this._render();
+        this.onPurchase();
       },
       handleClose: () => {
         this._setVisible(false);

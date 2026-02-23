@@ -13275,7 +13275,8 @@
           },
           onTick: function (cb) {
             // Simple interval to simulate game ticks.
-            setInterval(cb, 1000);
+            // 60 fps = 1000 / 60 = 16.666666666666668
+            setInterval(cb, 1000 / 60);
           },
           getCpS: function() {
             cookies = cookies + Math.random() * 1000; // Simulate cookies increasing over time.

@@ -22,6 +22,7 @@
     "d3-scale-chromatic": "3.1.0",
     "react": "^18.3.1",
     "react-chartjs-2": "5.3.1",
+    "react-countup": "6.5.3",
     "react-dom": "^18.3.1",
     "react-rnd": "10.5.2",
     "throttleit": "2.1.0"
