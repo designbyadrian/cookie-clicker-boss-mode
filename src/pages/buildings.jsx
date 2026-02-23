@@ -3,7 +3,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faLock } from "@fortawesome/free-solid-svg-icons/faLock";
 
 import "../chartjsSetup.js";
-import { Doughnut } from "react-chartjs-2";
+import { Bar, Doughnut } from "react-chartjs-2";
 
 import { formatLargeNumber, getColourArray } from "../utils";
 
@@ -13,11 +13,15 @@ import { useSettings } from "../context/SettingsContext.jsx";
 
 const Buildings = ({ cookies, cps, buildings }) => {
   const [data, setData] = useState([]);
-  const [pieChartData, setPieChartData] = useState(null);
+  const [cpsChartData, setCpsChartData] = useState(null);
+  const [buildingCountData, setBuildingCountData] = useState(null);
   const { storeMultiplier } = useSettings();
   const colours = useRef(getColourArray(10));
-  const pieMetaRef = useRef([]);
-  const chartRef = useRef(null);
+  const cpsChartMetaRef = useRef([]);
+  const cpsChartRef = useRef(null);
+  const buildingChartRef = useRef(null);
+  const buildingChartMetaRef = useRef([]);
+  const [selectedAttachment, setSelectedAttachment] = useState(null);
 
   const handleAttachmentChange = (id, state) => {
     console.log(id, state);
@@ -77,6 +81,19 @@ const Buildings = ({ cookies, cps, buildings }) => {
         },
       },
       {
+        accessorKey: "level",
+        header: "Lv.",
+        cell: (info) => {
+          const value = info.getValue();
+          const row = info.row.original;
+
+          return <span>{value}</span>;
+        },
+        meta: {
+          align: "right",
+        },
+      },
+      {
         accessorKey: "cps",
         header: "CPS",
         cell: (info) => {
@@ -116,22 +133,30 @@ const Buildings = ({ cookies, cps, buildings }) => {
       },
       {
         accessorKey: "bulkSell",
-        header: "Sell",
+        header: () => {
+          return `Sell (${storeMultiplier}x)`;
+        },
         cell: (info) => {
-          const value = info.getValue();
+          const value = info.getValue()[storeMultiplier.toString()] || "0";
           const row = info.row.original;
+          const amount = info.row.original.amount;
 
           if (row.locked) {
             return <span className="text-slate-500">???</span>;
+          }
+
+          console.log(info, info.row.original, value);
+
+          if (value === "0") {
+            return <span className="text-slate-500">n/a</span>;
           }
 
           return (
             <button
               type="button"
               className="px-2 py-1 text-xs font-semibold text-orange-600 bg-orange-50 rounded shadow-sm hover:bg-orange-100 dark:bg-orange-500/20 dark:text-orange-400 dark:shadow-none dark:hover:bg-green-500/30 disabled:opacity-50 disabled:bg-slate-50 disabled:text-slate-600 disabled:cursor-not-allowed"
-              disabled
             >
-              {formatLargeNumber(value["1"], "suffix")}
+              {formatLargeNumber(value, "suffix")}
             </button>
           );
         },
@@ -145,7 +170,7 @@ const Buildings = ({ cookies, cps, buildings }) => {
           return `Buy (${storeMultiplier}x)`;
         },
         cell: (info) => {
-          const value = info.getValue()[storeMultiplier.toString()] || "1";
+          const value = info.getValue()[storeMultiplier.toString()] || "0";
           const row = info.row.original;
 
           if (row.locked) {
@@ -174,6 +199,47 @@ const Buildings = ({ cookies, cps, buildings }) => {
 
     const labels = filteredBuildsings.map((b) => b.name);
 
+    colours.current = getColourArray(labels.length);
+
+    // Building Count Data
+
+    const buildingCountMeta = filteredBuildsings.map((b) => ({
+      name: b.name,
+      amount: b.amount || 0,
+    }));
+
+    const buildingCountData = buildingCountMeta.map((entry) => entry.amount);
+
+    setBuildingCountData({
+      labels,
+      datasets: [
+        {
+          //label: "Amount",
+          data: buildingCountData,
+          backgroundColor: colours.current.map((color) =>
+            color.replace(
+              /rgba\((\d+), (\d+), (\d+), (\d+)\)/,
+              "rgba($1, $2, $3, 0.8)",
+            ),
+          ),
+          borderColor: colours.current,
+
+          options: {
+            scales: {
+              y: {
+                beginAtZero: true,
+              },
+            },
+          },
+        },
+      ],
+      meta: buildingCountMeta,
+    });
+
+    buildingChartMetaRef.current = buildingCountMeta;
+
+    // CpS Chart Data
+
     const pieMeta = filteredBuildsings.map((b) => ({
       name: b.name,
       cps: b.cps || 0,
@@ -183,10 +249,9 @@ const Buildings = ({ cookies, cps, buildings }) => {
 
     const pieData = pieMeta.map((entry) => entry.cps);
 
-    colours.current = getColourArray(labels.length);
-    pieMetaRef.current = pieMeta;
+    cpsChartMetaRef.current = pieMeta;
 
-    setPieChartData({
+    setCpsChartData({
       labels,
       datasets: [
         {
@@ -210,25 +275,28 @@ const Buildings = ({ cookies, cps, buildings }) => {
 
     setData(filteredBuildsings);
   }, [buildings]);
-
+  console.log(buildingCountData);
   return (
     <div className="min-w-full">
       <Table columns={columns} data={data} />
       <Attachment
         id="cps-chart"
+        caption="CpS Distribution"
         onChange={handleAttachmentChange}
         onResize={() => {
-          chartRef.current?.resize();
+          cpsChartRef.current?.resize();
         }}
-        width={400}
-        height={400}
-        x={300}
+        width={300}
+        height={300}
+        x={750}
         y={100}
         lockAspectRatio
+        onClick={() => setSelectedAttachment("cps-chart")}
+        selected={selectedAttachment === "cps-chart"}
       >
         <Doughnut
-          ref={chartRef}
-          data={pieChartData ?? { labels: [], datasets: [] }}
+          ref={cpsChartRef}
+          data={cpsChartData ?? { labels: [], datasets: [] }}
           options={{
             responsive: true,
             plugins: {
@@ -236,7 +304,7 @@ const Buildings = ({ cookies, cps, buildings }) => {
                 callbacks: {
                   label: function (context) {
                     const value = context.parsed || 0;
-                    const meta = pieMetaRef.current[context.dataIndex];
+                    const meta = cpsChartMetaRef.current[context.dataIndex];
                     const total =
                       meta && typeof meta.percentageOfTotal === "number"
                         ? meta.percentageOfTotal
@@ -256,6 +324,51 @@ const Buildings = ({ cookies, cps, buildings }) => {
                 },
               },
               legend: {
+                display: false,
+              },
+            },
+          }}
+        />
+      </Attachment>
+      <Attachment
+        id="building-count-chart"
+        caption="Facility Count"
+        onChange={handleAttachmentChange}
+        onResize={() => {
+          buildingChartRef.current?.resize();
+        }}
+        width={500}
+        height={300}
+        x={800}
+        y={500}
+        onClick={() => setSelectedAttachment("building-count-chart")}
+        selected={selectedAttachment === "building-count-chart"}
+      >
+        <Bar
+          ref={buildingChartRef}
+          data={buildingCountData ?? { labels: [], datasets: [] }}
+          options={{
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+              x: {
+                ticks: { display: false },
+              },
+            },
+            plugins: {
+              tooltip: {
+                callbacks: {
+                  label: function (context) {
+                    const { label, raw } = context;
+
+                    return `${formatLargeNumber(raw, "suffix")} units`;
+                  },
+                },
+              },
+              legend: {
+                display: false,
+              },
+              datalabels: {
                 display: false,
               },
             },

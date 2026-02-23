@@ -1,12 +1,27 @@
 // src/chartjsSetup.js
 // Global Chart.js registration for all charts
-import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
+import {
+  Chart as ChartJS,
+  ArcElement,
+  BarElement,
+  CategoryScale,
+  LinearScale,
+  Tooltip,
+  Legend,
+} from "chart.js";
 
 import { getColourArray } from "./utils";
 
 const chartColors = getColourArray(10); // Replace 10 with the desired number of colors
 
-ChartJS.register(ArcElement, Tooltip, Legend);
+ChartJS.register(
+  ArcElement,
+  BarElement,
+  CategoryScale,
+  LinearScale,
+  Tooltip,
+  Legend,
+);
 
 // Set global default color palette for supported chart elements
 ChartJS.defaults.color = "#222"; // fallback text color
