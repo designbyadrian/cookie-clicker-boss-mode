@@ -510,6 +510,9 @@ Constrain images and videos to the parent width and preserve their intrinsic asp
   white-space: nowrap;
   border-width: 0;
 }
+#boss-mode-overlay .pointer-events-none {
+  pointer-events: none;
+}
 #boss-mode-overlay .pointer-events-auto {
   pointer-events: auto;
 }
@@ -531,6 +534,10 @@ Constrain images and videos to the parent width and preserve their intrinsic asp
 #boss-mode-overlay .inset-0 {
   inset: 0px;
 }
+#boss-mode-overlay .inset-x-0 {
+  left: 0px;
+  right: 0px;
+}
 #boss-mode-overlay .-bottom-1 {
   bottom: -0.25rem;
 }
@@ -543,8 +550,20 @@ Constrain images and videos to the parent width and preserve their intrinsic asp
 #boss-mode-overlay .-top-1 {
   top: -0.25rem;
 }
+#boss-mode-overlay .top-full {
+  top: 100%;
+}
 #boss-mode-overlay .z-10 {
   z-index: 10;
+}
+#boss-mode-overlay .z-20 {
+  z-index: 20;
+}
+#boss-mode-overlay .col-start-1 {
+  grid-column-start: 1;
+}
+#boss-mode-overlay .row-start-1 {
+  grid-row-start: 1;
 }
 #boss-mode-overlay .-ml-1 {
   margin-left: -0.25rem;
@@ -560,6 +579,9 @@ Constrain images and videos to the parent width and preserve their intrinsic asp
 }
 #boss-mode-overlay .mr-1 {
   margin-right: 0.25rem;
+}
+#boss-mode-overlay .mr-2 {
+  margin-right: 0.5rem;
 }
 #boss-mode-overlay .block {
   display: block;
@@ -585,9 +607,21 @@ Constrain images and videos to the parent width and preserve their intrinsic asp
 #boss-mode-overlay .aspect-square {
   aspect-ratio: 1 / 1;
 }
+#boss-mode-overlay .\!size-full {
+  width: 100% !important;
+  height: 100% !important;
+}
 #boss-mode-overlay .size-2 {
   width: 0.5rem;
   height: 0.5rem;
+}
+#boss-mode-overlay .size-3 {
+  width: 0.75rem;
+  height: 0.75rem;
+}
+#boss-mode-overlay .size-3\.5 {
+  width: 0.875rem;
+  height: 0.875rem;
 }
 #boss-mode-overlay .size-4 {
   width: 1rem;
@@ -601,8 +635,17 @@ Constrain images and videos to the parent width and preserve their intrinsic asp
   width: 2.25rem;
   height: 2.25rem;
 }
+#boss-mode-overlay .h-6 {
+  height: 1.5rem;
+}
+#boss-mode-overlay .w-full {
+  width: 100%;
+}
 #boss-mode-overlay .min-w-20 {
   min-width: 5rem;
+}
+#boss-mode-overlay .min-w-60 {
+  min-width: 15rem;
 }
 #boss-mode-overlay .min-w-full {
   min-width: 100%;
@@ -642,11 +685,25 @@ Constrain images and videos to the parent width and preserve their intrinsic asp
 #boss-mode-overlay .resize {
   resize: both;
 }
+#boss-mode-overlay .appearance-none {
+  -webkit-appearance: none;
+     -moz-appearance: none;
+          appearance: none;
+}
+#boss-mode-overlay .grid-cols-1 {
+  grid-template-columns: repeat(1, minmax(0, 1fr));
+}
 #boss-mode-overlay .flex-col {
   flex-direction: column;
 }
+#boss-mode-overlay .items-start {
+  align-items: flex-start;
+}
 #boss-mode-overlay .items-center {
   align-items: center;
+}
+#boss-mode-overlay .items-stretch {
+  align-items: stretch;
 }
 #boss-mode-overlay .justify-start {
   justify-content: flex-start;
@@ -659,6 +716,9 @@ Constrain images and videos to the parent width and preserve their intrinsic asp
 }
 #boss-mode-overlay .gap-1 {
   gap: 0.25rem;
+}
+#boss-mode-overlay .gap-2 {
+  gap: 0.5rem;
 }
 #boss-mode-overlay .gap-3 {
   gap: 0.75rem;
@@ -679,6 +739,10 @@ Constrain images and videos to the parent width and preserve their intrinsic asp
   border-top-width: calc(1px * calc(1 - var(--tw-divide-y-reverse)));
   border-bottom-width: calc(1px * var(--tw-divide-y-reverse));
 }
+#boss-mode-overlay .divide-slate-200 > :not([hidden]) ~ :not([hidden]) {
+  --tw-divide-opacity: 1;
+  border-color: rgb(226 232 240 / var(--tw-divide-opacity, 1));
+}
 #boss-mode-overlay .divide-slate-300 > :not([hidden]) ~ :not([hidden]) {
   --tw-divide-opacity: 1;
   border-color: rgb(203 213 225 / var(--tw-divide-opacity, 1));
@@ -686,8 +750,20 @@ Constrain images and videos to the parent width and preserve their intrinsic asp
 #boss-mode-overlay .divide-white\/15 > :not([hidden]) ~ :not([hidden]) {
   border-color: rgb(255 255 255 / 0.15);
 }
+#boss-mode-overlay .self-center {
+  align-self: center;
+}
+#boss-mode-overlay .justify-self-end {
+  justify-self: end;
+}
+#boss-mode-overlay .justify-self-center {
+  justify-self: center;
+}
 #boss-mode-overlay .overflow-auto {
   overflow: auto;
+}
+#boss-mode-overlay .overflow-hidden {
+  overflow: hidden;
 }
 #boss-mode-overlay .whitespace-nowrap {
   white-space: nowrap;
@@ -697,6 +773,9 @@ Constrain images and videos to the parent width and preserve their intrinsic asp
 }
 #boss-mode-overlay .rounded-full {
   border-radius: 9999px;
+}
+#boss-mode-overlay .rounded-md {
+  border-radius: 0.375rem;
 }
 #boss-mode-overlay .rounded-b {
   border-bottom-right-radius: 0.25rem;
@@ -710,6 +789,10 @@ Constrain images and videos to the parent width and preserve their intrinsic asp
 }
 #boss-mode-overlay .border-t {
   border-top-width: 1px;
+}
+#boss-mode-overlay .border-gray-300 {
+  --tw-border-opacity: 1;
+  border-color: rgb(209 213 219 / var(--tw-border-opacity, 1));
 }
 #boss-mode-overlay .border-slate-200 {
   --tw-border-opacity: 1;
@@ -743,19 +826,18 @@ Constrain images and videos to the parent width and preserve their intrinsic asp
   --tw-bg-opacity: 1;
   background-color: rgb(255 255 255 / var(--tw-bg-opacity, 1));
 }
-#boss-mode-overlay .bg-gradient-to-b {
-  background-image: linear-gradient(to bottom, var(--tw-gradient-stops));
+#boss-mode-overlay .stroke-white {
+  stroke: #fff;
 }
-#boss-mode-overlay .from-slate-50 {
-  --tw-gradient-from: #f8fafc var(--tw-gradient-from-position);
-  --tw-gradient-to: rgb(248 250 252 / 0) var(--tw-gradient-to-position);
-  --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to);
-}
-#boss-mode-overlay .to-slate-100 {
-  --tw-gradient-to: #f1f5f9 var(--tw-gradient-to-position);
+#boss-mode-overlay .stroke-white\/25 {
+  stroke: rgb(255 255 255 / 0.25);
 }
 #boss-mode-overlay .p-1 {
   padding: 0.25rem;
+}
+#boss-mode-overlay .px-1 {
+  padding-left: 0.25rem;
+  padding-right: 0.25rem;
 }
 #boss-mode-overlay .px-2 {
   padding-left: 0.5rem;
@@ -780,12 +862,25 @@ Constrain images and videos to the parent width and preserve their intrinsic asp
 #boss-mode-overlay .pb-2 {
   padding-bottom: 0.5rem;
 }
+#boss-mode-overlay .pl-3 {
+  padding-left: 0.75rem;
+}
+#boss-mode-overlay .pr-8 {
+  padding-right: 2rem;
+}
+#boss-mode-overlay .text-center {
+  text-align: center;
+}
 #boss-mode-overlay .font-mono {
   font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
 }
 #boss-mode-overlay .text-sm {
   font-size: 0.875rem;
   line-height: 1.25rem;
+}
+#boss-mode-overlay .text-sm\/6 {
+  font-size: 0.875rem;
+  line-height: 1.5rem;
 }
 #boss-mode-overlay .text-xs {
   font-size: 0.75rem;
@@ -800,11 +895,18 @@ Constrain images and videos to the parent width and preserve their intrinsic asp
 #boss-mode-overlay .font-semibold {
   font-weight: 600;
 }
+#boss-mode-overlay .uppercase {
+  text-transform: uppercase;
+}
 #boss-mode-overlay .italic {
   font-style: italic;
 }
 #boss-mode-overlay .leading-tight {
   line-height: 1.25;
+}
+#boss-mode-overlay .text-gray-900 {
+  --tw-text-opacity: 1;
+  color: rgb(17 24 39 / var(--tw-text-opacity, 1));
 }
 #boss-mode-overlay .text-green-600 {
   --tw-text-opacity: 1;
@@ -826,6 +928,10 @@ Constrain images and videos to the parent width and preserve their intrinsic asp
   --tw-text-opacity: 1;
   color: rgb(100 116 139 / var(--tw-text-opacity, 1));
 }
+#boss-mode-overlay .text-slate-600 {
+  --tw-text-opacity: 1;
+  color: rgb(71 85 105 / var(--tw-text-opacity, 1));
+}
 #boss-mode-overlay .text-slate-700 {
   --tw-text-opacity: 1;
   color: rgb(51 65 85 / var(--tw-text-opacity, 1));
@@ -840,6 +946,12 @@ Constrain images and videos to the parent width and preserve their intrinsic asp
 }
 #boss-mode-overlay .underline {
   text-decoration-line: underline;
+}
+#boss-mode-overlay .opacity-0 {
+  opacity: 0;
+}
+#boss-mode-overlay .opacity-100 {
+  opacity: 1;
 }
 #boss-mode-overlay .shadow {
   --tw-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
@@ -856,6 +968,18 @@ Constrain images and videos to the parent width and preserve their intrinsic asp
   --tw-shadow-colored: 0 1px 2px 0 var(--tw-shadow-color);
   box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
 }
+#boss-mode-overlay .outline {
+  outline-style: solid;
+}
+#boss-mode-overlay .outline-1 {
+  outline-width: 1px;
+}
+#boss-mode-overlay .-outline-offset-1 {
+  outline-offset: -1px;
+}
+#boss-mode-overlay .outline-slate-300 {
+  outline-color: #cbd5e1;
+}
 #boss-mode-overlay .blur {
   --tw-blur: blur(8px);
   filter: var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow);
@@ -870,6 +994,22 @@ Constrain images and videos to the parent width and preserve their intrinsic asp
 }
 #boss-mode-overlay .ease-in-out {
   transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+}
+#boss-mode-overlay .checked\:border-sky-600:checked {
+  --tw-border-opacity: 1;
+  border-color: rgb(2 132 199 / var(--tw-border-opacity, 1));
+}
+#boss-mode-overlay .checked\:bg-sky-600:checked {
+  --tw-bg-opacity: 1;
+  background-color: rgb(2 132 199 / var(--tw-bg-opacity, 1));
+}
+#boss-mode-overlay .indeterminate\:border-sky-600:indeterminate {
+  --tw-border-opacity: 1;
+  border-color: rgb(2 132 199 / var(--tw-border-opacity, 1));
+}
+#boss-mode-overlay .indeterminate\:bg-sky-600:indeterminate {
+  --tw-bg-opacity: 1;
+  background-color: rgb(2 132 199 / var(--tw-bg-opacity, 1));
 }
 #boss-mode-overlay .hover\:bg-blue-400:hover {
   --tw-bg-opacity: 1;
@@ -904,8 +1044,37 @@ Constrain images and videos to the parent width and preserve their intrinsic asp
   --tw-ring-shadow: var(--tw-ring-inset) 0 0 0 calc(3px + var(--tw-ring-offset-width)) var(--tw-ring-color);
   box-shadow: var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow, 0 0 #0000);
 }
+#boss-mode-overlay .focus-visible\:outline:focus-visible {
+  outline-style: solid;
+}
+#boss-mode-overlay .focus-visible\:outline-2:focus-visible {
+  outline-width: 2px;
+}
+#boss-mode-overlay .focus-visible\:-outline-offset-2:focus-visible {
+  outline-offset: -2px;
+}
+#boss-mode-overlay .focus-visible\:outline-offset-2:focus-visible {
+  outline-offset: 2px;
+}
+#boss-mode-overlay .focus-visible\:outline-indigo-500:focus-visible {
+  outline-color: #6366f1;
+}
+#boss-mode-overlay .focus-visible\:outline-indigo-600:focus-visible {
+  outline-color: #4f46e5;
+}
+#boss-mode-overlay .focus-visible\:outline-sky-600:focus-visible {
+  outline-color: #0284c7;
+}
 #boss-mode-overlay .disabled\:cursor-not-allowed:disabled {
   cursor: not-allowed;
+}
+#boss-mode-overlay .disabled\:border-gray-300:disabled {
+  --tw-border-opacity: 1;
+  border-color: rgb(209 213 219 / var(--tw-border-opacity, 1));
+}
+#boss-mode-overlay .disabled\:bg-gray-100:disabled {
+  --tw-bg-opacity: 1;
+  background-color: rgb(243 244 246 / var(--tw-bg-opacity, 1));
 }
 #boss-mode-overlay .disabled\:bg-slate-50:disabled {
   --tw-bg-opacity: 1;
@@ -917,6 +1086,19 @@ Constrain images and videos to the parent width and preserve their intrinsic asp
 }
 #boss-mode-overlay .disabled\:opacity-50:disabled {
   opacity: 0.5;
+}
+#boss-mode-overlay .disabled\:checked\:bg-gray-100:checked:disabled {
+  --tw-bg-opacity: 1;
+  background-color: rgb(243 244 246 / var(--tw-bg-opacity, 1));
+}
+#boss-mode-overlay .group:has(:disabled) .group-has-\[\:disabled\]\:stroke-gray-950\/25 {
+  stroke: rgb(3 7 18 / 0.25);
+}
+#boss-mode-overlay .group:has(:checked) .group-has-\[\:checked\]\:opacity-100 {
+  opacity: 1;
+}
+#boss-mode-overlay .group:has(:indeterminate) .group-has-\[\:indeterminate\]\:opacity-100 {
+  opacity: 1;
 }
 #boss-mode-overlay .aria-selected\:border-t-white[aria-selected="true"] {
   --tw-border-opacity: 1;
@@ -931,14 +1113,32 @@ Constrain images and videos to the parent width and preserve their intrinsic asp
   --tw-shadow-colored: 0 1px 2px 0 var(--tw-shadow-color);
   box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
 }
+@media (min-width: 640px) {
+
+  #boss-mode-overlay .sm\:size-2 {
+    width: 0.5rem;
+    height: 0.5rem;
+  }
+
+  #boss-mode-overlay .sm\:text-sm\/6 {
+    font-size: 0.875rem;
+    line-height: 1.5rem;
+  }
+}
 #boss-mode-overlay .dark\:divide-white\/15:where(.dark, .dark *) > :not([hidden]) ~ :not([hidden]) {
   border-color: rgb(255 255 255 / 0.15);
+}
+#boss-mode-overlay .dark\:border-white\/10:where(.dark, .dark *) {
+  border-color: rgb(255 255 255 / 0.1);
 }
 #boss-mode-overlay .dark\:bg-green-500\/20:where(.dark, .dark *) {
   background-color: rgb(34 197 94 / 0.2);
 }
 #boss-mode-overlay .dark\:bg-orange-500\/20:where(.dark, .dark *) {
   background-color: rgb(249 115 22 / 0.2);
+}
+#boss-mode-overlay .dark\:bg-white\/5:where(.dark, .dark *) {
+  background-color: rgb(255 255 255 / 0.05);
 }
 #boss-mode-overlay .dark\:text-green-400:where(.dark, .dark *) {
   --tw-text-opacity: 1;
@@ -947,6 +1147,10 @@ Constrain images and videos to the parent width and preserve their intrinsic asp
 #boss-mode-overlay .dark\:text-orange-400:where(.dark, .dark *) {
   --tw-text-opacity: 1;
   color: rgb(251 146 60 / var(--tw-text-opacity, 1));
+}
+#boss-mode-overlay .dark\:text-slate-500:where(.dark, .dark *) {
+  --tw-text-opacity: 1;
+  color: rgb(100 116 139 / var(--tw-text-opacity, 1));
 }
 #boss-mode-overlay .dark\:text-white:where(.dark, .dark *) {
   --tw-text-opacity: 1;
@@ -957,6 +1161,59 @@ Constrain images and videos to the parent width and preserve their intrinsic asp
   --tw-shadow-colored: 0 0 #0000;
   box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
 }
+#boss-mode-overlay .dark\:outline-white\/10:where(.dark, .dark *) {
+  outline-color: rgb(255 255 255 / 0.1);
+}
+#boss-mode-overlay .dark\:\*\:bg-slate-800 > *:where(.dark, .dark *) {
+  --tw-bg-opacity: 1;
+  background-color: rgb(30 41 59 / var(--tw-bg-opacity, 1));
+}
+#boss-mode-overlay .dark\:checked\:border-sky-500:checked:where(.dark, .dark *) {
+  --tw-border-opacity: 1;
+  border-color: rgb(14 165 233 / var(--tw-border-opacity, 1));
+}
+#boss-mode-overlay .dark\:checked\:bg-sky-500:checked:where(.dark, .dark *) {
+  --tw-bg-opacity: 1;
+  background-color: rgb(14 165 233 / var(--tw-bg-opacity, 1));
+}
+#boss-mode-overlay .dark\:indeterminate\:border-sky-500:indeterminate:where(.dark, .dark *) {
+  --tw-border-opacity: 1;
+  border-color: rgb(14 165 233 / var(--tw-border-opacity, 1));
+}
+#boss-mode-overlay .dark\:indeterminate\:bg-sky-500:indeterminate:where(.dark, .dark *) {
+  --tw-bg-opacity: 1;
+  background-color: rgb(14 165 233 / var(--tw-bg-opacity, 1));
+}
 #boss-mode-overlay .dark\:hover\:bg-green-500\/30:hover:where(.dark, .dark *) {
   background-color: rgb(34 197 94 / 0.3);
+}
+#boss-mode-overlay .dark\:focus-visible\:outline-indigo-500:focus-visible:where(.dark, .dark *) {
+  outline-color: #6366f1;
+}
+#boss-mode-overlay .dark\:focus-visible\:outline-sky-500:focus-visible:where(.dark, .dark *) {
+  outline-color: #0ea5e9;
+}
+#boss-mode-overlay .dark\:disabled\:border-white\/5:disabled:where(.dark, .dark *) {
+  border-color: rgb(255 255 255 / 0.05);
+}
+#boss-mode-overlay .dark\:disabled\:bg-white\/10:disabled:where(.dark, .dark *) {
+  background-color: rgb(255 255 255 / 0.1);
+}
+#boss-mode-overlay .dark\:disabled\:checked\:bg-white\/10:checked:disabled:where(.dark, .dark *) {
+  background-color: rgb(255 255 255 / 0.1);
+}
+#boss-mode-overlay .group:has(:disabled) .dark\:group-has-\[\:disabled\]\:stroke-white\/25:where(.dark, .dark *) {
+  stroke: rgb(255 255 255 / 0.25);
+}
+@media (forced-colors: active) {
+
+  #boss-mode-overlay .forced-colors\:appearance-auto {
+    -webkit-appearance: auto;
+       -moz-appearance: auto;
+            appearance: auto;
+  }
+}
+#boss-mode-overlay .\[\&\>\*\]\:\!size-full>* {
+  width: 100% !important;
+  height: 100% !important;
 }

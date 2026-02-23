@@ -204,8 +204,6 @@
             });
           }
 
-          console.log("list", list);
-          console.log("str list", JSON.stringify(list));
           return list;
         },
         buyUpgrade: function (id) {
@@ -390,7 +388,6 @@
       overlay.init({
         id: "boss-mode-overlay",
         gameApi: gameApi,
-        // Create a small toggle button in the top bar.
         mountButton: function (toggle) {
           var existing = document.getElementById("boss-mode-toggle");
           if (existing) return;
@@ -423,6 +420,68 @@
           });
         },
       });
+
+      mod._patchGamePurchaseHooks(overlay);
+    },
+
+    /**
+     * Wrap Game's building buy/sell and upgrade buy so that any purchase
+     * (from our overlay or the main game UI) notifies the overlay to refresh.
+     */
+    _patchGamePurchaseHooks: function (overlay) {
+      if (
+        typeof overlay === "undefined" ||
+        typeof overlay.onPurchase !== "function"
+      ) {
+        return;
+      }
+
+      var notify = function () {
+        try {
+          overlay.onPurchase();
+        } catch (e) {
+          console.warn("[Boss Mode] onPurchase failed", e);
+        }
+      };
+
+      // Patch building buy/sell (IIFE so each building gets its own orig)
+      var objs = Game.ObjectsById || [];
+      for (var i = 0; i < objs.length; i++) {
+        (function (obj) {
+          if (!obj) return;
+          if (typeof obj.buy === "function") {
+            var origBuy = obj.buy;
+            obj.buy = function (amount) {
+              var result = origBuy.apply(this, arguments);
+              notify();
+              return result;
+            };
+          }
+          if (typeof obj.sell === "function") {
+            var origSell = obj.sell;
+            obj.sell = function (amount) {
+              var result = origSell.apply(this, arguments);
+              notify();
+              return result;
+            };
+          }
+        })(objs[i]);
+      }
+
+      // Patch upgrade buy (IIFE so each upgrade gets its own origBuy)
+      for (var id in Game.UpgradesById) {
+        if (!Object.prototype.hasOwnProperty.call(Game.UpgradesById, id))
+          continue;
+        (function (upgrade) {
+          if (!upgrade || typeof upgrade.buy !== "function") return;
+          var origBuy = upgrade.buy;
+          upgrade.buy = function () {
+            var result = origBuy.apply(this, arguments);
+            notify();
+            return result;
+          };
+        })(Game.UpgradesById[id]);
+      }
     },
 
     save: function () {
