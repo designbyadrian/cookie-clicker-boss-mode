@@ -4,11 +4,22 @@
 
 ## Boss Mode for Cookie Clicker
 
-Busy waiting for that AI Agent to mess up your work? Too tired to follow along? Like watching cookies being clicked? Don't like the boss watching?
+Do you like:
+
+- Numbers?
+- Spreadsheets??
+- Charts???
+- Bullet Points????
+
+No? Well, your manager thinks these make you look productive.
+
+Boss Mode transforms Cookie Clicker into a highly convincing corporate productivity dashboard! Perfect for unexpected office walk-ins, “Quick question” interruptions, and pretending you understand quarterly forecasting.
+
+Boss Mode is a fully cosmetic UI overhaul that disguises Cookie Clicker as a serious, enterprise-grade productivity tool. When activated, your bakery becomes a fake Excel Ribbon UI with real tables and graphs representing real data. You can buy and sell buildings, and review their production thanks to code from Percentage Graph Mod.
+
+Boss Mode is purely cosmetic, safe to uninstall, and will not affect your save in other ways than buying and selling upgrades.
 
 Activate Boss Mode!
-
-You get tables, and graphs, and everything that looks super important!
 
 Just press Ctrl+B!
 

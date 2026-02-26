@@ -1,7 +1,7 @@
 {
   "name": "cookie-clicker-boss-mode",
   "author": "Adrian von Gegerfelt <adrian@designbyadrian.com>",
-  "version": "0.1.0",
+  "version": "1.0.0-beta",
   "license": "MIT",
   "description": "Boss Mode overlay mod for Cookie Clicker (Steam), with React-rendered UI.",
   "scripts": {
@@ -18,6 +18,7 @@
     "@fortawesome/react-fontawesome": "3.2.0",
     "@tanstack/react-table": "8.21.3",
     "chart.js": "4.5.1",
+    "clippyjs": "0.1.0",
     "clsx": "2.1.1",
     "d3-scale-chromatic": "3.1.0",
     "react": "^18.3.1",

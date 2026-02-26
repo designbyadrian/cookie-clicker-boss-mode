@@ -11,7 +11,9 @@ import Table from "../components/Table.jsx";
 import Attachment from "../components/Attachment.jsx";
 import { useSettings } from "../context/SettingsContext.jsx";
 
-const Buildings = ({ cookies, cps, buildings }) => {
+import { getRandomBuySound, getRandomSellSound } from "../utils/sounds";
+
+const Buildings = ({ actions, buildings }) => {
   const [data, setData] = useState([]);
   const [cpsChartData, setCpsChartData] = useState(null);
   const [buildingCountData, setBuildingCountData] = useState(null);
@@ -25,6 +27,22 @@ const Buildings = ({ cookies, cps, buildings }) => {
 
   const handleAttachmentChange = (id, state) => {
     console.log(id, state);
+  };
+
+  const handleSell = (id) => {
+    const snd = getRandomSellSound();
+    if (actions && typeof actions.playSound === "function") {
+      actions.playSound(snd);
+    }
+    actions.sellBuilding(id, storeMultiplier);
+  };
+
+  const handleBuy = (id) => {
+    const snd = getRandomBuySound();
+    if (actions && typeof actions.playSound === "function") {
+      actions.playSound(snd);
+    }
+    actions.buyBuilding(id, storeMultiplier);
   };
 
   const columns = useMemo(() => {
@@ -157,6 +175,7 @@ const Buildings = ({ cookies, cps, buildings }) => {
             <button
               type="button"
               className="px-2 py-1 text-xs font-semibold text-orange-600 bg-orange-50 rounded shadow-sm hover:bg-orange-100 dark:bg-orange-500/20 dark:text-orange-400 dark:shadow-none dark:hover:bg-green-500/30 disabled:opacity-50 disabled:bg-slate-50 disabled:text-slate-600 disabled:cursor-not-allowed"
+              onClick={() => handleSell(row.id)}
             >
               {formatLargeNumber(value, "suffix")}
             </button>
@@ -172,7 +191,8 @@ const Buildings = ({ cookies, cps, buildings }) => {
           return `Buy (${storeMultiplier}x)`;
         },
         cell: (info) => {
-          const value = info.getValue()[storeMultiplier.toString()] || "0";
+          const multiplier = storeMultiplier.toString();
+          const value = info.getValue()[multiplier] || "0";
           const row = info.row.original;
 
           if (row.locked) {
@@ -183,7 +203,8 @@ const Buildings = ({ cookies, cps, buildings }) => {
             <button
               type="button"
               className="px-2 py-1 text-xs font-semibold text-green-600 bg-green-50 rounded shadow-sm hover:bg-green-100 dark:bg-green-500/20 dark:text-green-400 dark:shadow-none dark:hover:bg-green-500/30 disabled:opacity-50 disabled:bg-slate-50 disabled:text-slate-600 disabled:cursor-not-allowed"
-              disabled={cookies < value}
+              disabled={!row.canBuy[multiplier]}
+              onClick={() => handleBuy(row.id)}
             >
               {formatLargeNumber(value, "suffix")}
             </button>
@@ -194,7 +215,7 @@ const Buildings = ({ cookies, cps, buildings }) => {
         },
       },
     ];
-  }, [data, cookies, storeMultiplier]);
+  }, [data, storeMultiplier]);
 
   useEffect(() => {
     const filteredBuildsings = (buildings || []).filter((b) => !b.locked);
@@ -273,7 +294,7 @@ const Buildings = ({ cookies, cps, buildings }) => {
   }, [buildings]);
 
   return (
-    <div className="min-w-full">
+    <div className="relative min-w-full">
       <Table columns={columns} data={data} />
       <Attachment
         id="cps-chart"

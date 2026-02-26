@@ -30,12 +30,14 @@ const BossModeOverlay = {
     numberFormat: "short",
     cps: 0,
     cookies: 0,
+    newsTicker: "",
     upgrades: [],
     buildings: [],
     hasUpgrades: false,
     hasBuildings: false,
     hasTempBuff: false,
     hasTempDebuff: false,
+    legacy: null,
   },
   _options: null,
   _root: null,
@@ -43,6 +45,7 @@ const BossModeOverlay = {
   _originalTitle: null,
   _customTitle: FILE_NAME,
   _titleObserver: null,
+  _lastCanBuySummary: null,
 
   setCustomTitle(title) {
     this._customTitle = title;
@@ -96,10 +99,16 @@ const BossModeOverlay = {
 
     // Throttled functions
     // Tick path: only cookies + render (no buildings/upgrades) so we don't re-render on every tick.
-    this._throttledSetCookieData = throttle(() => this._setCookieData(), 200);
+    this._throttledSetCookieData = throttle(() => {
+      this._setCookieData();
+      // Cheap per-tick check: only recompute per-building canBuy when
+      // the overall affordability (for 1/10/100) actually changes.
+      this._updateAffordabilityIfChanged();
+      this._recomputeUpgradeCanBuy();
+    }, 200);
     this._throttledRender = throttle(() => {
       if (this._state.visible) this._render();
-    }, 200);
+    }, 400);
     this._throttledRefreshTitle = throttle(() => this._refreshTitle(), 1000);
 
     if (api && typeof api.onTick === "function") {
@@ -151,6 +160,18 @@ const BossModeOverlay = {
       this._state.hasTempBuff = !!data.hasTempBuff;
       this._state.hasTempDebuff = !!data.hasTempDebuff;
     }
+
+    if (api && typeof api.getNewsTicker === "function") {
+      this._state.newsTicker = api.getNewsTicker() || "";
+    } else {
+      this._state.newsTicker = "";
+    }
+
+    if (api && typeof api.getLegacy === "function") {
+      this._state.legacy = api.getLegacy();
+    } else {
+      this._state.legacy = null;
+    }
   },
 
   _refreshTitle() {
@@ -169,6 +190,93 @@ const BossModeOverlay = {
 
     if (this._state.hasUpgrades) this._state.upgrades = api.listUpgrades();
     if (this._state.hasBuildings) this._state.buildings = api.listBuildings();
+    this._recomputeUpgradeCanBuy();
+  },
+
+  /**
+   * Lightweight affordability summary used on each tick to decide whether
+   * we need to recompute per-building canBuy flags.
+   */
+  _computeCanBuySummary() {
+    const buildings = Array.isArray(this._state.buildings)
+      ? this._state.buildings
+      : [];
+    const cookies = this._state.cookies || 0;
+
+    if (!buildings.length) return null;
+
+    const summary = { 1: false, 10: false, 100: false };
+
+    for (const b of buildings) {
+      if (!b || !b.bulkBuy) continue;
+      const bulk = b.bulkBuy;
+      if (!summary[1] && bulk[1] != null && cookies >= bulk[1]) {
+        summary[1] = true;
+      }
+      if (!summary[10] && bulk[10] != null && cookies >= bulk[10]) {
+        summary[10] = true;
+      }
+      if (!summary[100] && bulk[100] != null && cookies >= bulk[100]) {
+        summary[100] = true;
+      }
+      if (summary[1] && summary[10] && summary[100]) break;
+    }
+
+    return summary;
+  },
+
+  _updateAffordabilityIfChanged() {
+    const summary = this._computeCanBuySummary();
+    if (!summary) return;
+
+    const prev = this._lastCanBuySummary;
+    if (
+      prev &&
+      summary[1] === prev[1] &&
+      summary[10] === prev[10] &&
+      summary[100] === prev[100]
+    ) {
+      return;
+    }
+
+    this._lastCanBuySummary = summary;
+    this._recomputeCanBuy();
+  },
+
+  _recomputeCanBuy() {
+    const cookies = this._state.cookies || 0;
+    const buildings = Array.isArray(this._state.buildings)
+      ? this._state.buildings
+      : [];
+
+    if (!buildings.length) return;
+
+    this._state.buildings = buildings.map((b) => {
+      if (!b || !b.bulkBuy) return b;
+      const bulk = b.bulkBuy;
+      const canBuy = {
+        1: bulk[1] != null && cookies >= bulk[1],
+        10: bulk[10] != null && cookies >= bulk[10],
+        100: bulk[100] != null && cookies >= bulk[100],
+      };
+      return { ...b, canBuy };
+    });
+  },
+
+  _recomputeUpgradeCanBuy() {
+    const cookies = this._state.cookies || 0;
+    const upgrades = Array.isArray(this._state.upgrades)
+      ? this._state.upgrades
+      : [];
+
+    if (!upgrades.length) return;
+
+    this._state.upgrades = upgrades.map((u) => {
+      if (!u) return u;
+      const canBuy =
+        !u.bought && !u.locked && u.price != null && cookies >= u.price;
+      return { ...u, canBuy };
+    });
   },
 
   /**
@@ -178,6 +286,7 @@ const BossModeOverlay = {
   onPurchase() {
     this._setCookieData();
     this._refreshData();
+    this._updateAffordabilityIfChanged();
     this._render();
   },
 
@@ -220,8 +329,10 @@ const BossModeOverlay = {
         title={FILE_NAME}
         cps={state.cps}
         cookies={state.cookies}
+        newsTicker={state.newsTicker}
         hasTempBuff={state.hasTempBuff}
         hasTempDebuff={state.hasTempDebuff}
+        legacy={state.legacy}
         upgrades={state.upgrades}
         buildings={state.buildings}
         numberFormat={state.numberFormat}
